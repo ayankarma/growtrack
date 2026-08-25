@@ -110,23 +110,7 @@ export default function LoginPage() {
           </button>
         </p>
 
-        {/* Divider */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 h-0.5 bg-retro-black"></div>
-          <span className="font-pixel text-xs">OR</span>
-          <div className="flex-1 h-0.5 bg-retro-black"></div>
-        </div>
 
-        {/* Google OAuth */}
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => setError('Google login failed.')}
-            shape="rectangular"
-            theme="outline"
-            text="continue_with"
-          />
-        </div>
       </div>
     </div>
   );
