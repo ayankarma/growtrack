@@ -1,115 +1,791 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+@import "tailwindcss";
 
-/* ─── Retro Pixel-Art Theme ─────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   🌱 GrowTrack — Stardew Valley / Game Boy Retro Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Theme Tokens ───────────────────────────────────────────────────────── */
 @theme {
   --font-pixel: "Press Start 2P", cursive;
   --font-retro: "VT323", monospace;
 
-  --color-retro-green: #4ade80;
-  --color-retro-darkgreen: #166534;
-  --color-retro-dirt: #854d0e;
-  --color-retro-darkdirt: #422006;
-  --color-retro-sky: #38bdf8;
-  --color-retro-yellow: #fde047;
-  --color-retro-red: #ef4444;
-  --color-retro-gray: #d1d5db;
+  /* Stardew-inspired palette */
+  --color-retro-green: #5dba3b;
+  --color-retro-darkgreen: #2d6e14;
+  --color-retro-lightgreen: #a8e063;
+  --color-retro-dirt: #8b5e3c;
+  --color-retro-darkdirt: #5a3a1a;
+  --color-retro-lightdirt: #c49a6c;
+  --color-retro-sky: #87ceeb;
+  --color-retro-darksky: #5ba3c9;
+  --color-retro-yellow: #f5c842;
+  --color-retro-gold: #ffb347;
+  --color-retro-red: #e74c3c;
+  --color-retro-softred: #ff6b6b;
+  --color-retro-gray: #c8c8c8;
   --color-retro-darkgray: #6b7280;
-  --color-retro-black: #111827;
-  --color-retro-white: #f9fafb;
-  --color-retro-panel: #fffbeb;
+  --color-retro-black: #1a1a2e;
+  --color-retro-white: #fef9ef;
+  --color-retro-cream: #fff8e7;
+  --color-retro-panel: #fdf6e3;
+  --color-retro-wood: #a0764a;
+  --color-retro-darkwood: #6b4226;
+  --color-retro-purple: #9b59b6;
 
-  --shadow-pixel: 4px 4px 0px 0px rgba(17, 24, 39, 1);
-  --shadow-pixel-sm: 2px 2px 0px 0px rgba(17, 24, 39, 1);
+  --shadow-pixel: 4px 4px 0px 0px #1a1a2e;
+  --shadow-pixel-sm: 2px 2px 0px 0px #1a1a2e;
+  --shadow-pixel-lg: 6px 6px 0px 0px #1a1a2e;
+  --shadow-glow-green: 0 0 12px rgba(93, 186, 59, 0.4);
+  --shadow-glow-gold: 0 0 16px rgba(245, 200, 66, 0.5);
 }
 
-/* ─── Base ────────────────────────────────────────────────────── */
+/* ─── CSS Custom Properties (non-Tailwind) ───────────────────────────────── */
+:root {
+  --garden-cell-size: 68px;
+  --toast-slide-duration: 0.4s;
+}
+
+/* ─── Keyframe Animations ────────────────────────────────────────────────── */
+@keyframes gentle-sway {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+}
+
+@keyframes float-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes bird-bob {
+  0%, 100% { transform: translateY(0) scaleX(1); }
+  25% { transform: translateY(-4px) scaleX(1); }
+  50% { transform: translateY(0) scaleX(-1); }
+  75% { transform: translateY(-2px) scaleX(-1); }
+}
+
+@keyframes sparkle {
+  0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(calc(100vw + 100%)); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(93, 186, 59, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(93, 186, 59, 0.6); }
+}
+
+@keyframes streak-flame {
+  0%, 100% { text-shadow: 0 0 4px #ff6b35, 0 0 8px #ff6b35; transform: scale(1); }
+  50% { text-shadow: 0 0 8px #ff6b35, 0 0 20px #ffa500, 0 0 30px #ff4500; transform: scale(1.1); }
+}
+
+@keyframes slide-in-top {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-out-top {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100%); opacity: 0; }
+}
+
+@keyframes toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes water-splash {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes grass-wave {
+  0%, 100% { background-position: 0 0, 12px 12px; }
+  50% { background-position: 2px 1px, 14px 13px; }
+}
+
+/* ─── Base Body ──────────────────────────────────────────────────────────── */
 body {
   font-family: var(--font-retro);
   color: var(--color-retro-black);
   font-size: 1.25rem;
-  background-color: #e8f5e9;
-  background-image:
-    radial-gradient(#c8e6c9 15%, transparent 15%),
-    radial-gradient(#c8e6c9 15%, transparent 15%);
-  background-position: 0 0, 10px 10px;
-  background-size: 20px 20px;
   min-height: 100vh;
+  overflow-x: hidden;
+
+  /* Stardew-style grass background */
+  background-color: #4a8c3f;
+  background-image:
+    radial-gradient(ellipse 3px 3px at 8px 8px, #5dba3b 40%, transparent 50%),
+    radial-gradient(ellipse 2px 4px at 20px 18px, #3d7a2a 30%, transparent 50%),
+    radial-gradient(ellipse 3px 3px at 32px 6px, #6fcf4a 35%, transparent 50%),
+    radial-gradient(ellipse 2px 3px at 14px 28px, #4a9e35 35%, transparent 50%);
+  background-size: 40px 36px;
+  animation: grass-wave 8s ease-in-out infinite;
 }
 
-/* ─── Pixel Button ────────────────────────────────────────────── */
+/* Retro pixelated rendering for sprites */
+img.pixel-sprite {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-retro-darkdirt);
+  border-left: 2px solid var(--color-retro-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-retro-wood);
+  border: 2px solid var(--color-retro-black);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-retro-lightdirt);
+}
+
+/* ─── Pixel Panel (RPG Window) ───────────────────────────────────────────── */
+.pixel-panel {
+  position: relative;
+  border: 4px solid var(--color-retro-black);
+  background: linear-gradient(180deg, var(--color-retro-cream) 0%, var(--color-retro-panel) 100%);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-pixel),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Decorative corner nails */
+.pixel-panel::before,
+.pixel-panel::after {
+  content: '•';
+  position: absolute;
+  font-size: 10px;
+  color: var(--color-retro-darkgray);
+  line-height: 1;
+}
+.pixel-panel::before {
+  top: 4px;
+  left: 6px;
+}
+.pixel-panel::after {
+  top: 4px;
+  right: 6px;
+}
+
+/* Wood-framed variant */
+.pixel-panel-wood {
+  position: relative;
+  border: 6px solid var(--color-retro-darkwood);
+  background: linear-gradient(180deg, var(--color-retro-cream) 0%, var(--color-retro-panel) 100%);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-pixel-lg),
+    inset 0 0 0 2px var(--color-retro-wood),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Pixel Button ───────────────────────────────────────────────────────── */
 .btn-pixel {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid var(--color-retro-black);
-  background-color: var(--color-retro-white);
+  gap: 0.35rem;
+  border: 3px solid var(--color-retro-black);
+  background: linear-gradient(180deg, var(--color-retro-white) 0%, #e8e0d0 100%);
   padding: 0.5rem 1rem;
   font-family: var(--font-pixel);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-retro-black);
-  box-shadow: var(--shadow-pixel);
+  box-shadow: var(--shadow-pixel-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  transition: all 0.1s;
+  transition: all 0.1s ease;
   text-decoration: none;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-pixel:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-pixel),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  filter: brightness(1.05);
 }
 
 .btn-pixel:active {
   transform: translateY(2px);
   box-shadow: none;
+  filter: brightness(0.95);
 }
 
 .btn-pixel:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  filter: grayscale(0.5);
 }
 
 .btn-pixel-primary {
-  background-color: var(--color-retro-green);
+  background: linear-gradient(180deg, #6dd44e 0%, #4a9e35 100%);
+  color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  border-color: var(--color-retro-darkgreen);
+}
+
+.btn-pixel-primary:hover {
+  background: linear-gradient(180deg, #7ee65c 0%, #5dba3b 100%);
 }
 
 .btn-pixel-danger {
-  background-color: var(--color-retro-red);
+  background: linear-gradient(180deg, #ff6b6b 0%, #e74c3c 100%);
   color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  border-color: #c0392b;
 }
 
-/* ─── Pixel Panel ─────────────────────────────────────────────── */
-.pixel-panel {
-  border: 4px solid var(--color-retro-black);
-  background-color: var(--color-retro-panel);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-pixel);
+.btn-pixel-danger:hover {
+  background: linear-gradient(180deg, #ff8787 0%, #ef5350 100%);
 }
 
-/* ─── Input ───────────────────────────────────────────────────── */
+.btn-pixel-gold {
+  background: linear-gradient(180deg, #f5c842 0%, #e6a817 100%);
+  color: var(--color-retro-black);
+  border-color: #c48d0c;
+}
+
+.btn-pixel-water {
+  background: linear-gradient(180deg, #87ceeb 0%, #5ba3c9 100%);
+  color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+  border-color: #3d7ea6;
+}
+
+.btn-pixel-water:hover {
+  background: linear-gradient(180deg, #a0ddf5 0%, #6db8d9 100%);
+}
+
+/* ─── Input ──────────────────────────────────────────────────────────────── */
 .pixel-input {
   border: 3px solid var(--color-retro-black);
   padding: 0.5rem 0.75rem;
   font-family: var(--font-retro);
   font-size: 1.25rem;
-  background: white;
+  background: linear-gradient(180deg, #fff 0%, #f8f4e8 100%);
   outline: none;
   width: 100%;
+  color: var(--color-retro-black);
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.08);
+  transition: box-shadow 0.15s ease;
 }
 
 .pixel-input:focus {
-  box-shadow: var(--shadow-pixel-sm);
+  box-shadow: var(--shadow-pixel-sm),
+    inset 2px 2px 0 rgba(0,0,0,0.08);
+  border-color: var(--color-retro-darkgreen);
 }
 
-/* ─── Select ──────────────────────────────────────────────────── */
+.pixel-input::placeholder {
+  color: var(--color-retro-darkgray);
+  opacity: 0.6;
+}
+
+/* ─── Select ─────────────────────────────────────────────────────────────── */
 .pixel-select {
   border: 3px solid var(--color-retro-black);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
   font-family: var(--font-retro);
   font-size: 1.25rem;
-  background: white;
+  background: linear-gradient(180deg, #fff 0%, #f8f4e8 100%);
   outline: none;
   cursor: pointer;
   appearance: none;
+  color: var(--color-retro-black);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a2e' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.pixel-select:focus {
+  box-shadow: var(--shadow-pixel-sm);
+  border-color: var(--color-retro-darkgreen);
+}
+
+/* ─── Garden Grid ────────────────────────────────────────────────────────── */
+.garden-container {
+  position: relative;
+  background: var(--color-retro-dirt);
+  border: 6px solid var(--color-retro-darkwood);
+  box-shadow: var(--shadow-pixel-lg),
+    inset 0 0 0 3px var(--color-retro-wood),
+    inset 0 0 20px rgba(0,0,0,0.15);
+  padding: 12px;
+}
+
+.garden-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.garden-plot {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6b4226 0%, #8b5e3c 40%, #7a4f30 100%);
+  border: 2px solid var(--color-retro-darkdirt);
+  cursor: default;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  min-width: 52px;
+}
+
+.garden-plot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 30%, rgba(139,94,60,0.3) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+.garden-plot:hover {
+  transform: scale(1.08);
+  z-index: 10;
+  box-shadow: 0 0 0 2px var(--color-retro-yellow),
+    0 4px 12px rgba(0,0,0,0.3);
+  border-color: var(--color-retro-yellow);
+}
+
+.garden-plot.has-plant {
+  background: linear-gradient(135deg, #5a3a1a 0%, #7a4f30 40%, #6b4226 100%);
+}
+
+.garden-plot .plant-sprite {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(1px 2px 1px rgba(0,0,0,0.3));
+}
+
+.garden-plot .plant-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: drop-shadow(1px 2px 1px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease;
+}
+
+.garden-plot:hover .plant-sprite,
+.garden-plot:hover .plant-emoji {
+  transform: scale(1.15);
+}
+
+/* Idle animations for mature plants */
+.garden-plot.stage-mature_tree .plant-emoji,
+.garden-plot.stage-mature_tree .plant-sprite,
+.garden-plot.stage-young_tree .plant-emoji,
+.garden-plot.stage-young_tree .plant-sprite {
+  animation: gentle-sway 4s ease-in-out infinite;
+}
+
+.garden-plot.stage-fruiting_tree .plant-emoji,
+.garden-plot.stage-fruiting_tree .plant-sprite {
+  animation: gentle-sway 3s ease-in-out infinite;
+}
+
+.garden-plot .bird-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.7rem;
+  animation: bird-bob 2s ease-in-out infinite;
+}
+
+/* Garden plot tooltip */
+.garden-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-retro-black);
+  color: var(--color-retro-white);
+  font-family: var(--font-pixel);
+  font-size: 0.45rem;
+  padding: 6px 10px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border: 2px solid var(--color-retro-darkgray);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  line-height: 1.6;
+}
+
+.garden-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-retro-black);
+}
+
+.garden-plot:hover .garden-tooltip {
+  opacity: 1;
+}
+
+/* ─── Habit Cards ────────────────────────────────────────────────────────── */
+.habit-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border: 3px solid var(--color-retro-black);
+  background: linear-gradient(180deg, #fff 0%, var(--color-retro-cream) 100%);
+  box-shadow: var(--shadow-pixel-sm);
+  transition: all 0.2s ease;
+  animation: fade-in 0.3s ease forwards;
+}
+
+.habit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pixel);
+}
+
+.habit-card.category-health {
+  border-left: 6px solid #e74c3c;
+}
+.habit-card.category-study {
+  border-left: 6px solid #3498db;
+}
+.habit-card.category-creative {
+  border-left: 6px solid #9b59b6;
+}
+.habit-card.category-chore {
+  border-left: 6px solid #e67e22;
+}
+
+/* Category badge */
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--color-retro-black);
+  background: var(--color-retro-cream);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Streak flame */
+.streak-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
+  color: var(--color-retro-darkgray);
+}
+
+.streak-display.active {
+  color: #ff6b35;
+}
+
+.streak-display.hot {
+  color: #ff4500;
+  animation: streak-flame 1.5s ease-in-out infinite;
+}
+
+.streak-fire {
+  font-size: 0.85rem;
+  filter: drop-shadow(0 0 3px rgba(255, 107, 53, 0.5));
+}
+
+/* ─── New Habit Form (Quest Scroll) ──────────────────────────────────────── */
+.quest-scroll {
+  border: 3px solid var(--color-retro-darkwood);
+  background: linear-gradient(180deg, #fdf6e3 0%, #f0e6c8 100%);
+  padding: 1rem;
+  box-shadow: var(--shadow-pixel-sm);
+  position: relative;
+}
+
+.quest-scroll::before {
+  content: '📜 New Quest';
+  display: block;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--color-retro-darkwood);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Stats Bar ──────────────────────────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border: 2px solid var(--color-retro-black);
+  background: linear-gradient(180deg, var(--color-retro-cream) 0%, #e8dfc8 100%);
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.stat-item .stat-icon {
+  font-size: 1rem;
+}
+
+.stat-item .stat-value {
+  color: var(--color-retro-darkgreen);
+  font-weight: bold;
+}
+
+/* ─── Toast Notifications ────────────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 400px;
+  border: 3px solid var(--color-retro-black);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-retro);
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-pixel);
+  animation: slide-in-top var(--toast-slide-duration) ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.toast.exiting {
+  animation: slide-out-top var(--toast-slide-duration) ease forwards;
+}
+
+.toast-success {
+  background: linear-gradient(180deg, #6dd44e 0%, #4a9e35 100%);
+  color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.toast-error {
+  background: linear-gradient(180deg, #ff6b6b 0%, #e74c3c 100%);
+  color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.toast-info {
+  background: linear-gradient(180deg, #87ceeb 0%, #5ba3c9 100%);
+  color: var(--color-retro-white);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.toast-unlock {
+  background: linear-gradient(180deg, #f5c842 0%, #e6a817 100%);
+  color: var(--color-retro-black);
+  border-color: #c48d0c;
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.5);
+  animation: toast-progress 3s linear forwards;
+}
+
+.toast-title {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  letter-spacing: 0.04em;
+}
+
+.toast-message {
+  font-size: 1.05rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+.app-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  animation: cloud-drift linear infinite;
+  pointer-events: none;
+  top: 10%;
+}
+
+.cloud:nth-child(1) { animation-duration: 25s; animation-delay: 0s; top: 5%; font-size: 1.2rem; }
+.cloud:nth-child(2) { animation-duration: 35s; animation-delay: 8s; top: 20%; font-size: 1.8rem; }
+.cloud:nth-child(3) { animation-duration: 30s; animation-delay: 15s; top: 35%; font-size: 1rem; opacity: 0.4; }
+
+/* ─── Login Page ─────────────────────────────────────────────────────────── */
+.login-scene {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.login-scene::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, transparent 0%, var(--color-retro-darkdirt) 40%, var(--color-retro-dirt) 100%);
+  z-index: 0;
+}
+
+.login-scene .scene-decoration {
+  position: absolute;
+  bottom: 80px;
+  font-size: 2rem;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+.login-card {
+  position: relative;
+  z-index: 2;
+  border: 6px solid var(--color-retro-darkwood);
+  background: linear-gradient(180deg, var(--color-retro-cream) 0%, #f0e6c8 100%);
+  padding: 2rem;
+  box-shadow: var(--shadow-pixel-lg),
+    inset 0 0 0 2px var(--color-retro-wood),
+    inset 0 2px 0 rgba(255,255,255,0.4);
+  width: 100%;
+  max-width: 420px;
+  animation: fade-in 0.6s ease forwards;
+}
+
+.login-title {
+  font-family: var(--font-pixel);
+  color: var(--color-retro-darkgreen);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+.login-subtitle {
+  color: var(--color-retro-darkgray);
+  font-size: 1.2rem;
+}
+
+/* ─── Loading State ──────────────────────────────────────────────────────── */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.loading-text {
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  color: var(--color-retro-white);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ─── Utility Animations ─────────────────────────────────────────────────── */
+.animate-sway {
+  animation: gentle-sway 4s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-up 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease forwards;
+}
+
+.water-effect {
+  animation: water-splash 0.6s ease forwards;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  :root {
+    --garden-cell-size: 52px;
+  }
+
+  .garden-plot .plant-emoji {
+    font-size: 1.4rem;
+  }
+
+  .pixel-panel,
+  .pixel-panel-wood {
+    padding: 1rem;
+  }
+
+  .stats-bar {
+    gap: 0.5rem;
+  }
+
+  .stat-item {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.45rem;
+  }
+
+  .habit-card {
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .toast {
+    min-width: 240px;
+    max-width: 320px;
+  }
 }

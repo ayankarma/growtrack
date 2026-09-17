@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './components/ToastNotification';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 
@@ -8,8 +9,9 @@ function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="font-pixel text-sm animate-pulse">Loading...</p>
+      <div className="loading-screen">
+        <div className="text-4xl animate-float">🌱</div>
+        <p className="loading-text">Loading...</p>
       </div>
     );
   }
@@ -20,8 +22,9 @@ function PublicRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="font-pixel text-sm animate-pulse">Loading...</p>
+      <div className="loading-screen">
+        <div className="text-4xl animate-float">🌱</div>
+        <p className="loading-text">Loading...</p>
       </div>
     );
   }
@@ -58,9 +61,11 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
       <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
+        <ToastProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </ToastProvider>
       </AuthProvider>
     </GoogleOAuthProvider>
   );

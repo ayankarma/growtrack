@@ -1,24 +1,62 @@
+import { useToast } from './ToastNotification';
+
 /**
- * Maps growth_stage values to emoji representations.
- * Will be replaced with pixel-art sprites in a future phase.
+ * Hybrid stage map: Uses actual generated sprites where available, 
+ * and falls back to styled emojis for the remaining stages.
  */
 const STAGE_MAP = {
-  empty:         { emoji: '🟫', label: 'Empty Plot' },
-  seed:          { emoji: '🫘', label: 'Seed' },
-  sprout:        { emoji: '🌱', label: 'Sprout' },
-  bud:           { emoji: '🌿', label: 'Bud' },
-  bloom:         { emoji: '🌸', label: 'Bloom' },
-  sapling:       { emoji: '🌾', label: 'Sapling' },
-  young_tree:    { emoji: '🪴', label: 'Young Tree' },
-  mature_tree:   { emoji: '🌳', label: 'Mature Tree' },
-  fruiting_tree: { emoji: '🍊', label: 'Fruiting Tree' },
+  empty: { 
+    type: 'emoji', 
+    content: '🟫', 
+    label: 'Empty Plot' 
+  },
+  seed: { 
+    type: 'sprite', 
+    src: '/sprites/seed.jpg', 
+    label: 'Seed' 
+  },
+  sprout: { 
+    type: 'sprite', 
+    src: '/sprites/sprout.jpg', 
+    label: 'Sprout' 
+  },
+  bud: { 
+    type: 'sprite', 
+    src: '/sprites/bud.jpg', 
+    label: 'Bud' 
+  },
+  bloom: { 
+    type: 'sprite', 
+    src: '/sprites/bloom.jpg', 
+    label: 'Bloom' 
+  },
+  sapling: { 
+    type: 'sprite', 
+    src: '/sprites/sapling.jpg', 
+    label: 'Sapling' 
+  },
+  young_tree: { 
+    type: 'sprite', 
+    src: '/sprites/young_tree.jpg', 
+    label: 'Young Tree' 
+  },
+  mature_tree: { 
+    type: 'emoji', 
+    content: '🌳', 
+    label: 'Mature Tree' 
+  },
+  fruiting_tree: { 
+    type: 'emoji', 
+    content: '🍊', 
+    label: 'Fruiting Tree' 
+  },
 };
 
 export default function GardenGrid({ plots }) {
   if (!plots || plots.length === 0) {
     return (
-      <div className="pixel-panel text-center">
-        <p className="font-pixel text-xs">Loading garden...</p>
+      <div className="pixel-panel-wood text-center">
+        <p className="font-pixel text-xs animate-pulse">Loading garden...</p>
       </div>
     );
   }
@@ -30,31 +68,50 @@ export default function GardenGrid({ plots }) {
   });
 
   return (
-    <div className="pixel-panel">
-      <h2 className="font-pixel text-sm mb-4 text-center">🌻 Your Garden 🌻</h2>
-      <div
-        className="grid gap-1 mx-auto"
-        style={{
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          maxWidth: '420px',
-        }}
-      >
+    <div className="garden-container">
+      <h2 className="font-pixel text-sm mb-4 text-center text-retro-cream" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.5)' }}>
+        🌻 Your Garden 🌻
+      </h2>
+      
+      <div className="garden-grid mx-auto" style={{ maxWidth: '420px' }}>
         {sortedPlots.map((plot) => {
           const stageInfo = STAGE_MAP[plot.growth_stage] || STAGE_MAP.empty;
           const hasBirds = plot.birds_visiting;
+          const hasPlant = plot.habit_id != null;
 
           return (
             <div
               key={plot.id}
-              className="flex flex-col items-center justify-center border-2 border-retro-darkdirt bg-retro-dirt aspect-square cursor-default transition-all hover:scale-105"
-              title={`${stageInfo.label}${hasBirds ? ' 🐦 Birds visiting!' : ''}`}
-              style={{ minWidth: '56px' }}
+              className={`garden-plot stage-${plot.growth_stage} ${hasPlant ? 'has-plant' : ''}`}
             >
-              <span className="text-2xl leading-none select-none">
-                {stageInfo.emoji}
-              </span>
+              {/* Plant Visual */}
+              {stageInfo.type === 'sprite' ? (
+                <img 
+                  src={stageInfo.src} 
+                  alt={stageInfo.label} 
+                  className="plant-sprite pixel-sprite" 
+                />
+              ) : (
+                <span className="plant-emoji select-none">
+                  {stageInfo.content}
+                </span>
+              )}
+
+              {/* Bird Indicator */}
               {hasBirds && (
-                <span className="text-xs mt-0.5 leading-none">🐦</span>
+                <span className="bird-indicator select-none">🐦</span>
+              )}
+
+              {/* RPG Tooltip */}
+              {hasPlant && (
+                <div className="garden-tooltip">
+                  <strong className="block text-[#a8e063] mb-1 text-xs">
+                    {plot.habit_name}
+                  </strong>
+                  Stage: {stageInfo.label}<br/>
+                  Planted: {new Date(plot.planted_at).toLocaleDateString()}
+                  {hasBirds && <><br/><span className="text-[#f5c842]">Birds are visiting!</span></>}
+                </div>
               )}
             </div>
           );

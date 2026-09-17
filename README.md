@@ -2,11 +2,13 @@
   <img src="https://em-content.zobj.net/source/apple/391/seedling_1f331.png" width="80" />
 </p>
 
-<h1 align="center">GrowTrack</h1>
+<h1 align="center">🌻 GrowTrack 🌻</h1>
 <p align="center"><strong>Plant Habits. Grow Progress.</strong></p>
 
 <p align="center">
-  A gamified habit tracker where every habit you build grows a living plant in your personal pixel-art garden. Stay consistent, watch your garden flourish. Break the streak, and your plants wilt. 🌱➡️🌳
+  <em>A Stardew Valley-inspired gamified habit tracker.</em><br/>
+  Every habit you build grows a living plant in your personal 16-bit pixel-art garden.<br/>
+  Stay consistent, watch your garden flourish. Break the streak, and your plants wilt. 🌱➡️🌳
 </p>
 
 <p align="center">
@@ -183,7 +185,7 @@ The core tables:
 - [x] Rare plant unlock system
 - [x] JWT auth with httpOnly cookies
 - [x] Cloud deployment (Vercel + Render)
-- [ ] Retro pixel-art visual overhaul (Stardew Valley / Game Boy aesthetic)
+- [x] Retro pixel-art visual overhaul (Stardew Valley / Game Boy aesthetic)
 - [ ] Google OAuth integration
 - [ ] Social features (visit friends' gardens)
 - [ ] Achievements & badges

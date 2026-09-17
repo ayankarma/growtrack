@@ -37,35 +37,47 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="pixel-panel w-full max-w-md">
+    <div className="login-scene">
+      {/* Background Decorations */}
+      <div className="cloud" style={{ top: '10%', animationDuration: '40s' }}>☁️</div>
+      <div className="cloud" style={{ top: '25%', animationDuration: '30s', animationDelay: '-10s', fontSize: '2rem' }}>☁️</div>
+      <div className="cloud" style={{ top: '40%', animationDuration: '50s', animationDelay: '-20s', opacity: 0.3 }}>☁️</div>
+      
+      <div className="scene-decoration" style={{ left: '10%' }}>🌳</div>
+      <div className="scene-decoration" style={{ right: '15%', transform: 'scale(0.8)' }}>🪴</div>
+      <div className="scene-decoration" style={{ left: '25%', bottom: '90px', fontSize: '1rem' }}>🌱</div>
+      <div className="scene-decoration" style={{ right: '30%', bottom: '70px', fontSize: '1.2rem' }}>🌿</div>
+
+      {/* Login Card (Notice Board) */}
+      <div className="login-card">
         {/* Title */}
-        <div className="text-center mb-6">
-          <h1 className="font-pixel text-xl text-retro-darkgreen mb-2">
-            🌱 GrowTrack
+        <div className="text-center mb-8">
+          <div className="text-4xl mb-3 animate-float">🌱</div>
+          <h1 className="login-title text-xl mb-2">
+            GrowTrack
           </h1>
-          <p className="text-retro-darkgray text-lg">
+          <p className="font-pixel text-[0.55rem] uppercase tracking-widest text-retro-darkwood">
             Plant Habits. Grow Progress.
           </p>
         </div>
 
         {/* Email/Password Form */}
-        <form onSubmit={handleSubmit} className="space-y-3 mb-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mb-6 relative z-10">
           {isRegister && (
             <div>
-              <label className="font-pixel text-xs block mb-1">Display Name</label>
+              <label className="font-pixel text-xs block mb-1 text-retro-darkwood">Display Name</label>
               <input
                 type="text"
                 className="pixel-input"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Your name"
+                placeholder="Farmer name"
                 required
               />
             </div>
           )}
           <div>
-            <label className="font-pixel text-xs block mb-1">Email</label>
+            <label className="font-pixel text-xs block mb-1 text-retro-darkwood">Email</label>
             <input
               type="email"
               className="pixel-input"
@@ -76,7 +88,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="font-pixel text-xs block mb-1">Password</label>
+            <label className="font-pixel text-xs block mb-1 text-retro-darkwood">Password</label>
             <input
               type="password"
               className="pixel-input"
@@ -88,29 +100,34 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && <p className="text-retro-red font-pixel text-xs">{error}</p>}
+          {error && (
+            <div className="bg-retro-softred text-white p-2 border-2 border-[#c0392b] font-pixel text-[0.55rem] text-center shadow-pixel-sm">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="btn-pixel btn-pixel-primary w-full"
+            className="btn-pixel btn-pixel-primary w-full py-3"
             disabled={loading}
           >
-            {loading ? '...' : isRegister ? '🌱 Sign Up' : '🚪 Log In'}
+            {loading ? '...' : isRegister ? '🌱 Start Journey' : '🚪 Enter Farm'}
           </button>
         </form>
 
         {/* Toggle Login/Register */}
-        <p className="text-center text-sm mb-4">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+        <div className="text-center">
+          <p className="text-retro-darkgray text-sm mb-2 font-bold">
+            {isRegister ? 'Already have a farm?' : "New to the valley?"}
+          </p>
           <button
-            className="underline text-retro-darkgreen font-bold"
+            className="btn-pixel btn-pixel-gold"
             onClick={() => { setIsRegister(!isRegister); setError(''); }}
+            type="button"
           >
-            {isRegister ? 'Log In' : 'Sign Up'}
+            {isRegister ? 'Return to Login' : 'Create New Farm'}
           </button>
-        </p>
-
-
+        </div>
       </div>
     </div>
   );
